@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rubberneckers - X33 Dorm Bar 酒单</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --neon-gold: #ffd700;
+            --glass-bg: rgba(20, 20, 20, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: #0f0f0f;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(76, 29, 149, 0.15), transparent 25%), 
+                radial-gradient(circle at 85% 30%, rgba(180, 83, 9, 0.15), transparent 25%);
+            color: #e0e0e0;
+            font-family: 'Noto Serif SC', serif;
+            min-height: 100vh;
+        }
+
+        .font-display { font-family: 'Cinzel', serif; }
+
+        /* 卡片样式 */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 15px 40px -10px rgba(255, 215, 0, 0.1);
+        }
+
+        /* Modal 背景模糊 */
+        .modal-overlay-blur {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        /* 输入框样式 */
+        .editable-input, .editable-textarea, .editable-long-desc {
+            background: transparent;
+            border: none;
+            color: inherit;
+            outline: none;
+            transition: 0.3s;
+        }
+        .editable-input:focus, .editable-textarea:focus {
+            border-bottom: 1px dashed var(--neon-gold);
+            background: rgba(255,255,255,0.05);
+        }
+        .editable-long-desc:focus {
+             border: 1px dashed var(--neon-gold);
+             background: rgba(255,255,255,0.05);
+        }
+        .editable-textarea { resize: none; min-height: 50px; }
+        .editable-long-desc { width: 100%; height: 100%; resize: none; line-height: 1.8; }
+
+        /* 图片容器 */
+        .h-48 { height: 12rem; }
+        .h-48 img { transition: transform 0.7s ease; }
+        .glass-card:hover .h-48 img { transform: scale(1.1); }
+
+        /* 按钮 */
+        .btn-primary {
+            background: linear-gradient(90deg, rgba(255,215,0,0.1), rgba(255,215,0,0.2));
+            border: 1px solid var(--neon-gold);
+            color: var(--neon-gold);
+            transition: 0.3s;
+        }
+        .btn-primary:hover {
+            background: var(--neon-gold);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-gold);
+        }
+
+        /* 价格标签 */
+        .price-tag {
+            position: absolute; top: -10px; right: -10px;
+            background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%);
+            color: #000; font-weight: bold; padding: 6px 12px;
+            clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%, 0 20%);
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.5); z-index: 10; font-family: 'Cinzel', serif;
+        }
+
+        /* --- 滚动条隐藏修复 --- */
+        .custom-scrollbar::-webkit-scrollbar { display: none; }
+        .custom-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        [v-cloak] { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="app" v-cloak class="pb-20">
+    <header class="sticky top-0 z-50 backdrop-blur-lg border-b border-white/10 bg-black/60 mb-10">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-martini-glass-citrus text-amber-500 text-2xl"></i>
+                <div>
+                    <h1 class="text-2xl font-display tracking-widest text-white">LIQUOR4</h1>
+                    <p class="text-xs text-gray-400 tracking-widest uppercase">RUBBERNECKERS BY X33 DORM BAR</p>
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <button @click="resetData" class="text-xs text-gray-500 hover:text-red-400 transition">
+                    <i class="fa-solid fa-rotate-left mr-1"></i> 重置酒单
+                </button>
+                
+                <button @click="openLocationModal" class="btn-primary px-6 py-2 rounded-full font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-location-dot"></i> 我们在哪
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4">
+        
+        <div class="mb-16">
+            <div class="flex items-center gap-4 mb-8">
+                <!-- 标题：CLASSICS -->
+                <h2 class="text-4xl font-display text-white/90">CLASSICS</h2>
+                <div class="h-px bg-gradient-to-r from-amber-500/50 to-transparent flex-grow"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div v-for="drink in classicDrinks" :key="drink.id" 
+                     class="glass-card rounded-xl overflow-hidden group relative flex flex-col"
+                     @click="openDrinkModal(drink)">
+                    
+                    <div class="h-48 relative bg-gray-800 overflow-hidden">
+                        <!-- AI Image Source -->
+                        <img :src="getAIImage(drink)" :key="`${drink.id}-${drink.seed}`" class="w-full h-full object-cover opacity-90 group-hover:scale-110 transition duration-700" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90"></div>
+                    </div>
+
+                    <div class="p-4 flex-grow flex flex-col">
+                         <div class="flex justify-between items-start mb-2">
+                             <div>
+                                <!-- 字体恢复：英文名（name）使用 Cinzel/font-display，中文名（subName）使用默认/Noto Serif SC -->
+                                <input v-model="drink.name" class="editable-input text-base font-bold text-white w-full font-display" placeholder="English Name" @click.stop="">
+                                <input v-model="drink.subName" class="editable-input text-xs text-amber-500 w-full" placeholder="中文名" @click.stop="">
+                             </div>
+                             <div class="text-lg font-display text-amber-400">
+                                 <span class="text-xs">¥</span><input v-model="drink.price" class="bg-transparent w-6 text-right outline-none" type="text" @click.stop="">
+                             </div>
+                        </div>
+                        <input v-model="drink.tags" class="editable-input text-xs text-gray-400 mb-2 w-full" placeholder="风味标签" @click.stop="">
+                        <textarea v-model="drink.desc" class="editable-textarea text-xs text-gray-400 leading-relaxed w-full bg-transparent" placeholder="描述..." @click.stop=""></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-20">
+            <div class="flex items-center gap-4 mb-8 justify-center">
+                <div class="h-px bg-gradient-to-l from-amber-500/50 to-transparent flex-grow"></div>
+                <!-- 标题：NEW ARRIVALS -->
+                <h2 class="text-4xl font-display text-white/90 text-center px-8 border-x border-amber-500/30">NEW ARRIVALS</h2>
+                <div class="h-px bg-gradient-to-r from-amber-500/50 to-transparent flex-grow"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                 <div v-for="drink in newDrinks" :key="drink.id" 
+                      class="glass-card rounded-xl overflow-hidden group relative flex flex-col"
+                      @click="openDrinkModal(drink)">
+                    
+                    <div class="h-48 relative bg-gray-800 overflow-hidden">
+                        <!-- AI Image Source -->
+                        <img :src="getAIImage(drink)" :key="`${drink.id}-${drink.seed}`" class="w-full h-full object-cover opacity-90 group-hover:scale-110 transition duration-700" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90"></div>
+                    </div>
+
+                    <div class="p-4 flex-grow flex flex-col">
+                        <div class="flex justify-between items-start mb-2">
+                             <div>
+                                <!-- 字体恢复：英文名（name）使用 Cinzel/font-display，中文名（subName）使用默认/Noto Serif SC -->
+                                <input v-model="drink.name" class="editable-input text-base font-bold text-white w-full font-display" placeholder="English Name" @click.stop="">
+                                <input v-model="drink.subName" class="editable-input text-xs text-amber-500 w-full" placeholder="中文名" @click.stop="">
+                             </div>
+                             <div class="text-lg font-display text-amber-400">
+                                 <span class="text-xs">¥</span><input v-model="drink.price" class="bg-transparent w-6 text-right outline-none" type="text" @click.stop="">
+                             </div>
+                        </div>
+                        <input v-model="drink.tags" class="editable-input text-xs text-gray-400 mb-2 w-full" placeholder="风味标签" @click.stop="">
+                        <textarea v-model="drink.desc" class="editable-textarea text-xs text-gray-400 leading-relaxed w-full bg-transparent" placeholder="描述..." @click.stop=""></textarea>
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- 鸡尾酒详情 Modal -->
+    <div v-if="isDrinkModalOpen" 
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay-blur transition-opacity duration-300"
+         @click.self="closeDrinkModal">
+        
+        <div class="glass-card w-full max-w-5xl p-0 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10" @click.stop="">
+            <div class="grid grid-cols-1 md:grid-cols-2 h-[80vh] md:h-[65vh]">
+                <div class="relative bg-gray-900 overflow-hidden hidden md:block group">
+                    <!-- AI Image Source -->
+                    <img :src="getAIImage(selectedDrink)" :key="`${selectedDrink.id}-${selectedDrink.seed}`" class="w-full h-full object-cover opacity-95 transition duration-1000 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    
+                    <!-- 恢复换图按钮，但移除了 DIY 提示词功能 -->
+                    <button @click="regenerateImage(selectedDrink)" class="absolute bottom-6 right-6 btn-primary px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold shadow-lg backdrop-blur-md z-20">
+                         <i class="fa-solid fa-wand-magic-sparkles"></i> 更换图片
+                    </button>
+                </div>
+
+                <div class="p-8 flex flex-col relative bg-black/80 md:bg-black/40 backdrop-blur-md">
+                    <button @click="closeDrinkModal" class="absolute top-4 right-4 w-10 h-10 rounded-full hover:bg-white/10 flex items-center justify-center text-white/50 hover:text-white transition z-10">
+                         <i class="fa-solid fa-xmark text-xl"></i>
+                    </button>
+                    
+                    <!-- 字体恢复：英文名（name）使用 Cinzel/font-display，中文名（subName）使用默认/Noto Serif SC -->
+                    <h3 class="text-5xl font-display text-white mb-1">{{ selectedDrink.name }}</h3>
+                    <p class="text-lg font-display text-amber-500 mb-6 tracking-widest uppercase">{{ selectedDrink.subName }}</p>
+
+                    <div class="flex items-center gap-2 text-sm text-amber-300/80 mb-6 italic border-l-2 border-amber-500 pl-3">
+                        {{ selectedDrink.tags }}
+                    </div>
+
+                    <div class="flex-grow overflow-y-auto pr-2 custom-scrollbar">
+                        <textarea v-model="selectedDrink.longDesc" 
+                                  class="editable-long-desc text-gray-300 text-lg font-light leading-8 mb-4"
+                                  placeholder="在这里输入酒款的详细介绍、故事或配方...">
+                        </textarea>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t border-white/10 flex justify-between items-end">
+                        <div class="text-4xl font-display text-amber-400">
+                             <span class="text-lg align-top mr-1">¥</span>{{ selectedDrink.price }}
+                        </div>
+                        <button @click="closeDrinkModal" class="text-xs text-gray-500 hover:text-white transition uppercase tracking-widest">
+                            Close [ESC]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 地理位置 Modal -->
+    <div v-if="isLocationModalOpen" 
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay-blur transition-opacity duration-300"
+         @click.self="closeLocationModal">
+        
+        <div class="glass-card w-full max-w-lg p-8 rounded-2xl shadow-2xl ring-1 ring-white/10" @click.stop="">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-3xl font-display text-amber-400">我们在哪</h3>
+                <button @click="closeLocationModal" class="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-white/50 hover:text-white transition">
+                     <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <div class="text-lg text-gray-300 leading-relaxed space-y-4">
+                <p>
+                    <i class="fa-solid fa-map-pin mr-2 text-amber-500"></i> 
+                    **地址:** 光明路 88 号，地下室 B1-101
+                </p>
+                <p>
+                    <i class="fa-solid fa-clock mr-2 text-amber-500"></i> 
+                    **营业时间:** 每日 19:00 - 次日 03:00 (周一休息)
+                </p>
+                <p>
+                    <i class="fa-solid fa-phone mr-2 text-amber-500"></i> 
+                    **电话:** (010) 8888 6666
+                </p>
+                <blockquote class="border-l-4 border-amber-500/50 pl-4 py-2 italic text-gray-400 mt-6">
+                    "隐藏在城市喧嚣之下的宁静绿洲。请找到那扇没有标记的黑铁门，按下门铃，夜幕下的秘密调酒之旅即将开启。"
+                </blockquote>
+            </div>
+        </div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 mt-16 text-center text-gray-500 italic text-sm">
+        <p class="mb-2">经典鸡尾酒已按综合烈度从低到高排列</p>
+        <p>~ Custom Orders Welcome ~</p>
+    </div>
+
+    <footer class="text-center text-gray-600 text-sm py-10 border-t border-white/5">
+        <p>Rubberneckers - X33 Dorm Bar</p>
+    </footer>
+</div>
+
+<script>
+    const { createApp, ref, watch, onMounted } = Vue;
+
+    // 全局默认提示词 (高对比度，暗背景，亮酒体，无人物)
+    const defaultGlobalPrompt = (drinkName) => `${drinkName} cocktail, professional photography, high contrast, bright drink, dimly lit luxurious bar background, dramatic lighting, bokeh effect, no people, no hands, ultra-realistic, 8k, cinematic, warm tones`;
+    
+    // 默认数据 - 经典款 (Classics) - 包含列表中的前11款
+    const defaultClassic = [
+        { id: 1, name: 'Mamie Taylor', subName: '玛米泰勒', price: '35', tags: '姜 / 威士忌 / 青柠', desc: '19世纪的消暑经典。', longDesc: '19世纪的消暑经典，威士忌与姜汁啤酒的复古组合。', seed: 101 },
+        { id: 2, name: 'Jungle Bird', subName: '丛林鸟', price: '40', tags: '热带果香 / 黑朗姆', desc: '马来西亚传奇配方！', longDesc: '马来西亚传奇配方！属于朗姆酒与Campari的丛林冒险。', seed: 102 },
+        { id: 3, name: 'El Diablo', subName: '恶魔', price: '45', tags: '莓果 / 辛辣 / 龙舌兰', desc: '混合黑加仑的甜蜜。', longDesc: '混合黑加仑的甜蜜与银龙舌兰的辛辣，如恶魔在舌尖低语。', seed: 103 },
+        { id: 4, name: 'Mizuwari', subName: '水割', price: '45', tags: '清冽纯净 / 威士忌', desc: '日式饮法的精髓。', longDesc: '日式饮法的精髓，以精准的水冰比例释放威士忌的细腻层次。', seed: 104 },
+        { id: 5, name: 'Gimlet', subName: '琴蕾', price: '35', tags: '干净利落 / 青柠 / 金酒', desc: '成名于《漫长的告别》。', longDesc: '干净利落，青柠的酸与金酒的凛冽。成名于《漫长的告别》最后一行：“对琴蕾还为时过早。”', seed: 105 },
+        { id: 6, name: 'Classic Highball', subName: '角嗨', price: '40', tags: '气泡水 / 威士忌', desc: '初尝时不会感到惊艳。', longDesc: '气泡水与角瓶威士忌的简单组合。初尝时不会感到惊艳，但习惯了便放不下的东西之一。', seed: 106 },
+        { id: 7, name: 'Whiskey Sour', subName: '威士忌酸', price: '35', tags: '丝滑 / 柠檬 / 威士忌', desc: '经典中之经典。', longDesc: '简单直接，丝滑的口感带着柠檬的清爽。经典中之经典。', seed: 107 },
+        { id: 8, name: 'Naked & Famous', subName: '一脱成名', price: '55', tags: '烟熏 / 梅斯卡尔 / 草本', desc: '现代经典，叛逆风味。', longDesc: '完美融合了烟熏龙舌兰与苦蒿利口酒的叛逆风味，现代经典。', seed: 108 },
+        { id: 9, name: 'Long Island Iced-tea', subName: '长岛冰茶', price: '65', tags: '多重烈酒 / 烈性', desc: 'Literally令人沉醉。', longDesc: '无害的茶色下藏着四种基酒的烈性，Literally令人沉醉。', seed: 109 },
+        { id: 10, name: 'Godfather', subName: '教父', price: '55', tags: '醇厚深邃 / 肉桂 / 杏仁', desc: '别样的黑帮仪式感。', longDesc: '烤肉桂条的温暖香气缠绕着威士忌，醇厚深邃。别样的黑帮仪式感。', seed: 110 },
+        { id: 11, name: 'Old-Fashioned', subName: '古典', price: '45', tags: '方糖 / 苦精 / 威士忌', desc: '鸡尾酒的鼻祖。', longDesc: '方糖、苦精与威士忌的简单组合，创造出平衡的口感。鸡尾酒的鼻祖。', seed: 111 }
+    ];
+
+    // 默认数据 - 新品 (New Arrivals) - 只包含最后3款原创
+    const defaultNew = [
+        { id: 12, name: 'A Study in Pink', subName: '莓瑰', price: '55', tags: '树莓 / 黑加仑 / 玫瑰', desc: '玫瑰是什么味道？', longDesc: '以树莓、黑加仑和玫瑰调配的特调。充满疑问：玫瑰是什么味道？', seed: 201 },
+        { id: 13, name: 'Garden of Eden', subName: '伊甸', price: '45', tags: '青苹果 / 烟熏威士忌', desc: '喝到整个故事。', longDesc: '以青苹果的清新搭配烟熏威士忌的泥土气息。你真的可以喝到整个故事。', seed: 202 },
+        { id: 14, name: 'Mourn', subName: '哀悼', price: '45', tags: '咸柠檬 / 白葡萄', desc: '借鉴港澳饮品“咸柠七”。', longDesc: '咸柠檬和白葡萄的组合，口感独特。借鉴港澳饮品“咸柠七”，纪念一位朋友的朋友。', seed: 203 }
+    ];
+
+    createApp({
+        setup() {
+            const classicDrinks = ref([]);
+            const newDrinks = ref([]);
+            const isDrinkModalOpen = ref(false); 
+            const isLocationModalOpen = ref(false); 
+            const selectedDrink = ref({});
+
+            const saveData = () => {
+                 localStorage.setItem('mm_classic', JSON.stringify(classicDrinks.value));
+                 localStorage.setItem('mm_new', JSON.stringify(newDrinks.value));
+            }
+
+            const resetData = () => {
+                classicDrinks.value = JSON.parse(JSON.stringify(defaultClassic));
+                newDrinks.value = JSON.parse(JSON.stringify(defaultNew));
+                saveData(); 
+            };
+
+            const initData = () => {
+                const savedClassic = localStorage.getItem('mm_classic');
+                const savedNew = localStorage.getItem('mm_new');
+                if (savedClassic && savedNew) {
+                    // 加载本地数据
+                    classicDrinks.value = JSON.parse(savedClassic).map(d => ({
+                        ...d, 
+                        longDesc: d.longDesc || d.desc,
+                        seed: d.seed || Math.floor(Math.random() * 100000) // 确保有 seed
+                    }));
+                    newDrinks.value = JSON.parse(savedNew).map(d => ({
+                        ...d, 
+                        longDesc: d.longDesc || d.desc,
+                        seed: d.seed || Math.floor(Math.random() * 100000) // 确保有 seed
+                    }));
+                } else {
+                    resetData(); 
+                }
+            };
+            
+            // AI Image Function
+            const getAIImage = (drink) => {
+                const finalPrompt = defaultGlobalPrompt(drink.name);
+                // 使用 Pollinations.ai 生成图片，fixed size 600x600
+                return `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=600&height=600&nologo=true&model=flux&seed=${drink.seed}`;
+            };
+
+            // Regenerate Image Function
+            const regenerateImage = (drink) => {
+                drink.seed = Math.floor(Math.random() * 100000);
+                if (isDrinkModalOpen.value && selectedDrink.value.id === drink.id) {
+                    selectedDrink.value = { ...drink }; 
+                }
+            };
+
+            // 鸡尾酒详情弹窗
+            const openDrinkModal = (drink) => {
+                selectedDrink.value = drink;
+                isDrinkModalOpen.value = true;
+            };
+            const closeDrinkModal = () => {
+                isDrinkModalOpen.value = false;
+                selectedDrink.value = {};
+            };
+            
+            // 地理位置弹窗
+            const openLocationModal = () => {
+                isLocationModalOpen.value = true;
+            };
+            const closeLocationModal = () => {
+                isLocationModalOpen.value = false;
+            };
+
+
+            // 监听器：数据变化时保存到本地存储
+            watch([classicDrinks, newDrinks], () => {
+                saveData();
+            }, { deep: true });
+
+            onMounted(() => {
+                initData();
+                document.addEventListener('keydown', (e) => {
+                    // ESC 键关闭任一弹窗
+                    if (e.key === 'Escape') {
+                        if (isDrinkModalOpen.value) closeDrinkModal();
+                        if (isLocationModalOpen.value) closeLocationModal();
+                    }
+                });
+            });
+
+            return {
+                classicDrinks, newDrinks, isDrinkModalOpen, selectedDrink,
+                getAIImage, regenerateImage,
+                openDrinkModal, closeDrinkModal,
+                openLocationModal, closeLocationModal,
+                resetData,
+                isLocationModalOpen
+            };
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>
