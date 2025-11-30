@@ -110,19 +110,24 @@
     <header class="sticky top-0 z-50 backdrop-blur-lg border-b border-white/10 bg-black/60 mb-10">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <i class="fa-solid fa-martini-glass-citrus text-amber-500 text-2xl"></i>
+                <i class="fa-solid fa-martini-glass-citrus text-amber-500 text-3xl"></i>
+                <!-- 修改标题字体和大小 -->
                 <div>
-                    <h1 class="text-2xl font-display tracking-widest text-white">LIQUOR4</h1>
-                    <p class="text-xs text-gray-400 tracking-widest uppercase">RUBBERNECKERS BY X33 DORM BAR</p>
+                    <h1 class="text-4xl font-display tracking-widest text-white">RUBBERNECKERS</h1>
+                    <!-- 副标题已修改为 "A DORM BAR AT X33" -->
+                    <p class="text-sm font-display tracking-widest uppercase text-amber-500/80">A DORM BAR AT X33</p>
                 </div>
             </div>
-            <div class="flex gap-4">
-                <button @click="resetData" class="text-xs text-gray-500 hover:text-red-400 transition">
-                    <i class="fa-solid fa-rotate-left mr-1"></i> 重置酒单
+            
+            <div class="flex gap-2">
+                <!-- 移除中文文字，只保留图标 -->
+                <button @click="resetData" class="p-3 rounded-full text-white/60 hover:text-red-400 hover:bg-white/10 transition" title="重置酒单">
+                    <i class="fa-solid fa-rotate-left text-lg"></i>
                 </button>
                 
-                <button @click="openLocationModal" class="btn-primary px-6 py-2 rounded-full font-bold flex items-center gap-2">
-                    <i class="fa-solid fa-location-dot"></i> 我们在哪
+                <!-- 移除中文文字，只保留图标 -->
+                <button @click="openLocationModal" class="btn-primary p-3 rounded-full font-bold flex items-center" title="我们在哪">
+                    <i class="fa-solid fa-location-dot text-lg"></i>
                 </button>
             </div>
         </div>
@@ -262,7 +267,7 @@
         
         <div class="glass-card w-full max-w-lg p-8 rounded-2xl shadow-2xl ring-1 ring-white/10" @click.stop="">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-3xl font-display text-amber-400">我们在哪</h3>
+                <h3 class="text-3xl font-display text-amber-400">FIND US IF YOU CAN</h3>
                 <button @click="closeLocationModal" class="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-white/50 hover:text-white transition">
                      <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
@@ -271,18 +276,18 @@
             <div class="text-lg text-gray-300 leading-relaxed space-y-4">
                 <p>
                     <i class="fa-solid fa-map-pin mr-2 text-amber-500"></i> 
-                    **地址:** 光明路 88 号，地下室 B1-101
+                     Address: A certain room, Dormitory X33
                 </p>
                 <p>
                     <i class="fa-solid fa-clock mr-2 text-amber-500"></i> 
-                    **营业时间:** 每日 19:00 - 次日 03:00 (周一休息)
+                    Business Hours: Depending on... my mood (Feel free to DM to schedule an appointment)
                 </p>
                 <p>
-                    <i class="fa-solid fa-phone mr-2 text-amber-500"></i> 
-                    **电话:** (010) 8888 6666
+                    <i class="fa-solid fa-mobile-screen mr-2 text-amber-500"></i> 
+                     WeChat: 13816077390
                 </p>
                 <blockquote class="border-l-4 border-amber-500/50 pl-4 py-2 italic text-gray-400 mt-6">
-                    "隐藏在城市喧嚣之下的宁静绿洲。请找到那扇没有标记的黑铁门，按下门铃，夜幕下的秘密调酒之旅即将开启。"
+                    "想来？自己找到那扇门，按下门铃，并证明你是来对地方的。祝你好运。"
                 </blockquote>
             </div>
         </div>
