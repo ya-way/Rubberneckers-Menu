@@ -149,9 +149,10 @@
 
                     <div class="p-4 flex-grow flex flex-col">
                          <div class="flex justify-between items-start mb-2">
+                              <!-- 名称已改为静态文本 -->
                               <div class="min-w-0">
-                                 <input v-model="drink.name" class="editable-input text-base font-bold text-white w-full font-display min-w-0" placeholder="English Name" @click.stop="">
-                                 <input v-model="drink.subName" class="editable-input text-xs text-amber-500 w-full min-w-0" placeholder="中文名" @click.stop="">
+                                 <div class="text-base font-bold text-white w-full font-display min-w-0 truncate">{{ drink.name }}</div>
+                                 <div class="text-xs text-amber-500 w-full min-w-0 truncate">{{ drink.subName }}</div>
                               </div>
                               
                               <div class="text-lg font-display text-amber-400 flex items-baseline whitespace-nowrap">
@@ -191,9 +192,10 @@
 
                     <div class="p-4 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-2">
+                             <!-- 名称已改为静态文本 -->
                              <div class="min-w-0">
-                                 <input v-model="drink.name" class="editable-input text-base font-bold text-white w-full font-display min-w-0" placeholder="English Name" @click.stop="">
-                                 <input v-model="drink.subName" class="editable-input text-xs text-amber-500 w-full min-w-0" placeholder="中文名" @click.stop="">
+                                 <div class="text-base font-bold text-white w-full font-display min-w-0 truncate">{{ drink.name }}</div>
+                                 <div class="text-xs text-amber-500 w-full min-w-0 truncate">{{ drink.subName }}</div>
                              </div>
                              
                              <div class="text-lg font-display text-amber-400 flex items-baseline whitespace-nowrap">
@@ -223,9 +225,7 @@
                          >
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                     
-                    <button @click="regenerateImage(selectedDrink)" class="absolute bottom-6 right-6 btn-primary px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold shadow-lg backdrop-blur-md z-20">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> 更换图片
-                    </button>
+                    <!-- 已移除更换图片按钮 -->
                 </div>
 
                 <div class="p-8 flex flex-col relative bg-black/80 md:bg-black/40 backdrop-blur-md">
@@ -307,9 +307,27 @@
 <script>
     const { createApp, ref, watch, onMounted } = Vue;
 
-    // 全局默认提示词 (高对比度，暗背景，亮酒体，无人物)
-    const defaultGlobalPrompt = (drinkName) => `${drinkName} cocktail, professional photography, high contrast, bright drink, dimly lit luxurious bar background, dramatic lighting, bokeh effect, no people, no hands, ultra-realistic, 8k, cinematic, warm tones`;
+    // --- 鸡尾酒专属 Prompt 映射，已包含所有酒款的颜色和杯型 ---
+    const drinkPromptMap = {
+        'Mamie Taylor': 'highball glass, pale golden color, ginger, whiskey, clear ice',
+        'Jungle Bird': 'tumbler, orange-red color, dense foam on top, pineapple garnish, tropical bar setting',
+        'El Diablo': 'highball glass, deep purple-red color, with blackberry garnish, tequila',
+        'Mizuwari': 'tall delicate highball glass, clear amber whiskey color, Japanese style, crystal clear ice, minimalist',
+        'Gimlet': 'coupe glass, pale lime green color, simple and elegant, gin',
+        'Classic Highball': 'tall thin highball glass, golden clear color, sparkling water bubbles, simple and refreshing',
+        'Whiskey Sour': 'rocks glass with a large ice cube, rich amber color, foam egg white top, lemon twist',
+        'Naked & Famous': 'coupe glass, burnt orange color, mescal, herbaceous, elegant',
+        'Long Island Iced-tea': 'tall highball glass, brown tea color, layered texture, lemon slice garnish',
+        'Godfather': 'rocks glass, dark amber color, orange twist garnish, cinematic, whiskey',
+        'Old-Fashioned': 'rocks glass, deep reddish-brown color, large ice cube, orange peel garnish, classic bar setting',
+        'A Study in Pink': 'coupe glass, pale rosy pink color, raspberry garnish, elegant, rose',
+        'Garden of Eden': 'rocks glass, smoky pale green color, apple slice garnish, moody lighting',
+        'Mourn': 'highball glass, clear slightly whitish color, carbonation bubbles, simple, salted lemon slice'
+    };
     
+    // 统一的基础风格 Prompt (不变部分)
+    const baseStylePrompt = ", professional photography, high contrast, bright drink, dimly lit luxurious bar background, dramatic lighting, bokeh effect, no people, no hands, ultra-realistic, 8k, cinematic, warm tones";
+
     // 默认数据 - 经典款 (Classics) - 包含列表中的前11款
     const defaultClassic = [
         { id: 1, name: 'Mamie Taylor', subName: '玛米泰勒', price: '35', tags: '姜 / 威士忌 / 青柠', desc: '19世纪的消暑经典。', longDesc: '19世纪的消暑经典，威士忌与姜汁啤酒的复古组合。', seed: 101 },
@@ -371,22 +389,20 @@
                 }
             };
             
-            // AI Image Function
+            // --- 优化后的 AI Image Function ---
             const getAIImage = (drink) => {
-                const finalPrompt = defaultGlobalPrompt(drink.name);
-                // 使用 Pollinations.ai 生成图片，fixed size 600x600，使用 seed 确保图片刷新
+                // 1. 获取特定饮品的描述（颜色和杯型）
+                const specificDetails = drinkPromptMap[drink.name] || 'clear golden cocktail in an elegant coupe glass, garnished with cherry';
+                
+                // 2. 组合最终的 Prompt (特定细节 + 风格)
+                const finalPrompt = `${drink.name} cocktail, ${specificDetails}${baseStylePrompt}`;
+                
+                // 3. 构建 Pollinations.ai URL
                 return `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}?width=600&height=600&nologo=true&model=flux&seed=${drink.seed}`;
             };
+            // --- 优化结束 ---
 
-            // Regenerate Image Function
-            const regenerateImage = (drink) => {
-                // 更改 seed 来强制刷新图片
-                drink.seed = Math.floor(Math.random() * 100000);
-                // 强制更新 selectedDrink 以刷新 Modal 中的图片
-                if (isDrinkModalOpen.value && selectedDrink.value.id === drink.id) {
-                    selectedDrink.value = { ...drink }; 
-                }
-            };
+            // **已移除 regenerateImage 函数**
 
             // 鸡尾酒详情弹窗
             const openDrinkModal = (drink) => {
@@ -425,7 +441,7 @@
 
             return {
                 classicDrinks, newDrinks, isDrinkModalOpen, selectedDrink,
-                getAIImage, regenerateImage,
+                getAIImage, 
                 openDrinkModal, closeDrinkModal,
                 openLocationModal, closeLocationModal,
                 resetData,
