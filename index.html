@@ -111,21 +111,17 @@
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <i class="fa-solid fa-martini-glass-citrus text-amber-500 text-3xl"></i>
-                <!-- 修改标题字体和大小 -->
                 <div>
                     <h1 class="text-4xl font-display tracking-widest text-white">RUBBERNECKERS</h1>
-                    <!-- 副标题已修改为 "A DORM BAR AT X33" -->
                     <p class="text-sm font-display tracking-widest uppercase text-amber-500/80">A DORM BAR AT X33</p>
                 </div>
             </div>
             
             <div class="flex gap-2">
-                <!-- 移除中文文字，只保留图标 -->
                 <button @click="resetData" class="p-3 rounded-full text-white/60 hover:text-red-400 hover:bg-white/10 transition" title="重置酒单">
                     <i class="fa-solid fa-rotate-left text-lg"></i>
                 </button>
                 
-                <!-- 移除中文文字，只保留图标 -->
                 <button @click="openLocationModal" class="btn-primary p-3 rounded-full font-bold flex items-center" title="我们在哪">
                     <i class="fa-solid fa-location-dot text-lg"></i>
                 </button>
@@ -133,59 +129,54 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4">
+    <main class="max-w-7xl mx-auto sm:px-4 px-0"> 
         
-        <div class="mb-16">
+        <div class="mb-16 sm:px-4"> 
             <div class="flex items-center gap-4 mb-8">
-                <!-- 标题：CLASSICS -->
                 <h2 class="text-4xl font-display text-white/90">CLASSICS</h2>
                 <div class="h-px bg-gradient-to-r from-amber-500/50 to-transparent flex-grow"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="grid **grid-cols-2** md:grid-cols-2 lg:grid-cols-5 gap-4">
                 <div v-for="drink in classicDrinks" :key="drink.id" 
-                     class="glass-card rounded-xl overflow-hidden group relative flex flex-col"
-                     @click="openDrinkModal(drink)">
+                    class="glass-card rounded-xl overflow-hidden group relative flex flex-col"
+                    @click="openDrinkModal(drink)">
                     
                     <div class="h-48 relative bg-gray-800 overflow-hidden">
-                        <!-- AI Image Source -->
                         <img :src="getAIImage(drink)" :key="`${drink.id}-${drink.seed}`" class="w-full h-full object-cover opacity-90 group-hover:scale-110 transition duration-700" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90"></div>
                     </div>
 
                     <div class="p-4 flex-grow flex flex-col">
                          <div class="flex justify-between items-start mb-2">
-                             <div>
-                                <!-- 字体恢复：英文名（name）使用 Cinzel/font-display，中文名（subName）使用默认/Noto Serif SC -->
-                                <input v-model="drink.name" class="editable-input text-base font-bold text-white w-full font-display" placeholder="English Name" @click.stop="">
-                                <input v-model="drink.subName" class="editable-input text-xs text-amber-500 w-full" placeholder="中文名" @click.stop="">
-                             </div>
-                             <div class="text-lg font-display text-amber-400">
-                                 <span class="text-xs">¥</span><input v-model="drink.price" class="bg-transparent w-6 text-right outline-none" type="text" @click.stop="">
-                             </div>
-                        </div>
-                        <input v-model="drink.tags" class="editable-input text-xs text-gray-400 mb-2 w-full" placeholder="风味标签" @click.stop="">
-                        <textarea v-model="drink.desc" class="editable-textarea text-xs text-gray-400 leading-relaxed w-full bg-transparent" placeholder="描述..." @click.stop=""></textarea>
+                              <div>
+                                 <input v-model="drink.name" class="editable-input text-base font-bold text-white w-full font-display" placeholder="English Name" @click.stop="">
+                                 <input v-model="drink.subName" class="editable-input text-xs text-amber-500 w-full" placeholder="中文名" @click.stop="">
+                              </div>
+                              <div class="text-lg font-display text-amber-400">
+                                  <span class="text-xs">¥</span><input v-model="drink.price" class="bg-transparent w-6 text-right outline-none" type="text" @click.stop="">
+                              </div>
+                         </div>
+                         <input v-model="drink.tags" class="editable-input text-xs text-gray-400 mb-2 w-full" placeholder="风味标签" @click.stop="">
+                         <textarea v-model="drink.desc" class="editable-textarea text-xs text-gray-400 leading-relaxed w-full bg-transparent" placeholder="描述..." @click.stop=""></textarea>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="mb-20">
+        <div class="mb-20 sm:px-4"> 
             <div class="flex items-center gap-4 mb-8 justify-center">
                 <div class="h-px bg-gradient-to-l from-amber-500/50 to-transparent flex-grow"></div>
-                <!-- 标题：NEW ARRIVALS -->
                 <h2 class="text-4xl font-display text-white/90 text-center px-8 border-x border-amber-500/30">NEW ARRIVALS</h2>
                 <div class="h-px bg-gradient-to-r from-amber-500/50 to-transparent flex-grow"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="grid **grid-cols-2** md:grid-cols-2 lg:grid-cols-5 gap-4">
                  <div v-for="drink in newDrinks" :key="drink.id" 
                       class="glass-card rounded-xl overflow-hidden group relative flex flex-col"
                       @click="openDrinkModal(drink)">
                     
                     <div class="h-48 relative bg-gray-800 overflow-hidden">
-                        <!-- AI Image Source -->
                         <img :src="getAIImage(drink)" :key="`${drink.id}-${drink.seed}`" class="w-full h-full object-cover opacity-90 group-hover:scale-110 transition duration-700" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/90"></div>
                     </div>
@@ -193,9 +184,8 @@
                     <div class="p-4 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-2">
                              <div>
-                                <!-- 字体恢复：英文名（name）使用 Cinzel/font-display，中文名（subName）使用默认/Noto Serif SC -->
-                                <input v-model="drink.name" class="editable-input text-base font-bold text-white w-full font-display" placeholder="English Name" @click.stop="">
-                                <input v-model="drink.subName" class="editable-input text-xs text-amber-500 w-full" placeholder="中文名" @click.stop="">
+                                 <input v-model="drink.name" class="editable-input text-base font-bold text-white w-full font-display" placeholder="English Name" @click.stop="">
+                                 <input v-model="drink.subName" class="editable-input text-xs text-amber-500 w-full" placeholder="中文名" @click.stop="">
                              </div>
                              <div class="text-lg font-display text-amber-400">
                                  <span class="text-xs">¥</span><input v-model="drink.price" class="bg-transparent w-6 text-right outline-none" type="text" @click.stop="">
@@ -209,88 +199,83 @@
         </div>
     </main>
     
-    <!-- 鸡尾酒详情 Modal -->
     <div v-if="isDrinkModalOpen" 
          class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay-blur transition-opacity duration-300"
          @click.self="closeDrinkModal">
-        
-        <div class="glass-card w-full max-w-5xl p-0 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10" @click.stop="">
-            <div class="grid grid-cols-1 md:grid-cols-2 h-[80vh] md:h-[65vh]">
-                <div class="relative bg-gray-900 overflow-hidden hidden md:block group">
-                    <!-- AI Image Source -->
-                    <img :src="getAIImage(selectedDrink)" :key="`${selectedDrink.id}-${selectedDrink.seed}`" class="w-full h-full object-cover opacity-95 transition duration-1000 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-                    
-                    <!-- 恢复换图按钮，但移除了 DIY 提示词功能 -->
-                    <button @click="regenerateImage(selectedDrink)" class="absolute bottom-6 right-6 btn-primary px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold shadow-lg backdrop-blur-md z-20">
+         
+         <div class="glass-card w-full max-w-5xl p-0 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10" @click.stop="">
+             <div class="grid grid-cols-1 md:grid-cols-2 h-[80vh] md:h-[65vh]">
+                 <div class="relative bg-gray-900 overflow-hidden hidden md:block group">
+                     <img :src="getAIImage(selectedDrink)" :key="`${selectedDrink.id}-${selectedDrink.seed}`" class="w-full h-full object-cover opacity-95 transition duration-1000 group-hover:scale-105">
+                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                     
+                     <button @click="regenerateImage(selectedDrink)" class="absolute bottom-6 right-6 btn-primary px-4 py-2 rounded-full flex items-center gap-2 text-sm font-bold shadow-lg backdrop-blur-md z-20">
                          <i class="fa-solid fa-wand-magic-sparkles"></i> 更换图片
-                    </button>
-                </div>
+                     </button>
+                 </div>
 
-                <div class="p-8 flex flex-col relative bg-black/80 md:bg-black/40 backdrop-blur-md">
-                    <button @click="closeDrinkModal" class="absolute top-4 right-4 w-10 h-10 rounded-full hover:bg-white/10 flex items-center justify-center text-white/50 hover:text-white transition z-10">
-                         <i class="fa-solid fa-xmark text-xl"></i>
-                    </button>
-                    
-                    <!-- 字体恢复：英文名（name）使用 Cinzel/font-display，中文名（subName）使用默认/Noto Serif SC -->
-                    <h3 class="text-5xl font-display text-white mb-1">{{ selectedDrink.name }}</h3>
-                    <p class="text-lg font-display text-amber-500 mb-6 tracking-widest uppercase">{{ selectedDrink.subName }}</p>
+                 <div class="p-8 flex flex-col relative bg-black/80 md:bg-black/40 backdrop-blur-md">
+                     <button @click="closeDrinkModal" class="absolute top-4 right-4 w-10 h-10 rounded-full hover:bg-white/10 flex items-center justify-center text-white/50 hover:text-white transition z-10">
+                          <i class="fa-solid fa-xmark text-xl"></i>
+                     </button>
+                     
+                     <h3 class="text-5xl font-display text-white mb-1">{{ selectedDrink.name }}</h3>
+                     <p class="text-lg font-display text-amber-500 mb-6 tracking-widest uppercase">{{ selectedDrink.subName }}</p>
 
-                    <div class="flex items-center gap-2 text-sm text-amber-300/80 mb-6 italic border-l-2 border-amber-500 pl-3">
-                        {{ selectedDrink.tags }}
-                    </div>
+                     <div class="flex items-center gap-2 text-sm text-amber-300/80 mb-6 italic border-l-2 border-amber-500 pl-3">
+                         {{ selectedDrink.tags }}
+                     </div>
 
-                    <div class="flex-grow overflow-y-auto pr-2 custom-scrollbar">
-                        <textarea v-model="selectedDrink.longDesc" 
-                                  class="editable-long-desc text-gray-300 text-lg font-light leading-8 mb-4"
-                                  placeholder="在这里输入酒款的详细介绍、故事或配方...">
-                        </textarea>
-                    </div>
+                     <div class="flex-grow overflow-y-auto pr-2 custom-scrollbar">
+                         <textarea v-model="selectedDrink.longDesc" 
+                                   class="editable-long-desc text-gray-300 text-lg font-light leading-8 mb-4"
+                                   placeholder="在这里输入酒款的详细介绍、故事或配方...">
+                         </textarea>
+                     </div>
 
-                    <div class="mt-6 pt-6 border-t border-white/10 flex justify-between items-end">
-                        <div class="text-4xl font-display text-amber-400">
-                             <span class="text-lg align-top mr-1">¥</span>{{ selectedDrink.price }}
-                        </div>
-                        <button @click="closeDrinkModal" class="text-xs text-gray-500 hover:text-white transition uppercase tracking-widest">
-                            Close [ESC]
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+                     <div class="mt-6 pt-6 border-t border-white/10 flex justify-between items-end">
+                         <div class="text-4xl font-display text-amber-400">
+                              <span class="text-lg align-top mr-1">¥</span>{{ selectedDrink.price }}
+                         </div>
+                         <button @click="closeDrinkModal" class="text-xs text-gray-500 hover:text-white transition uppercase tracking-widest">
+                             Close [ESC]
+                         </button>
+                     </div>
+                 </div>
+             </div>
+         </div>
     </div>
     
-    <!-- 地理位置 Modal -->
     <div v-if="isLocationModalOpen" 
          class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay-blur transition-opacity duration-300"
          @click.self="closeLocationModal">
-        
-        <div class="glass-card w-full max-w-lg p-8 rounded-2xl shadow-2xl ring-1 ring-white/10" @click.stop="">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-3xl font-display text-amber-400">FIND US IF YOU CAN</h3>
-                <button @click="closeLocationModal" class="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-white/50 hover:text-white transition">
-                     <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-            </div>
-            
-            <div class="text-lg text-gray-300 leading-relaxed space-y-4">
-                <p>
-                    <i class="fa-solid fa-map-pin mr-2 text-amber-500"></i> 
-                     Address: A certain room, Dormitory X33
-                </p>
-                <p>
-                    <i class="fa-solid fa-clock mr-2 text-amber-500"></i> 
-                    Business Hours: Depending on... my mood (Feel free to DM to schedule an appointment)
-                </p>
-                <p>
-                    <i class="fa-solid fa-mobile-screen mr-2 text-amber-500"></i> 
-                     WeChat: 13816077390
-                </p>
-                <blockquote class="border-l-4 border-amber-500/50 pl-4 py-2 italic text-gray-400 mt-6">
-                    "想来？自己找到那扇门，按下门铃，并证明你是来对地方的。祝你好运。"
-                </blockquote>
-            </div>
-        </div>
+         
+         <div class="glass-card w-full max-w-lg p-8 rounded-2xl shadow-2xl ring-1 ring-white/10" @click.stop="">
+             <div class="flex justify-between items-center mb-6">
+                 <h3 class="text-3xl font-display text-amber-400">FIND US IF YOU CAN</h3>
+                 <button @click="closeLocationModal" class="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-white/50 hover:text-white transition">
+                      <i class="fa-solid fa-xmark text-xl"></i>
+                 </button>
+             </div>
+             
+             <div class="text-lg text-gray-300 leading-relaxed space-y-4">
+                 <p>
+                     <i class="fa-solid fa-map-pin mr-2 text-amber-500"></i> 
+                      Address: A certain room, Dormitory X33
+                 </p>
+                 <p>
+                     <i class="fa-solid fa-clock mr-2 text-amber-500"></i> 
+                      Business Hours: Depending on... my mood (Feel free to DM to schedule an appointment)
+                 </p>
+                 <p>
+                     <i class="fa-solid fa-mobile-screen mr-2 text-amber-500"></i> 
+                      WeChat: 13816077390
+                 </p>
+                 <blockquote class="border-l-4 border-amber-500/50 pl-4 py-2 italic text-gray-400 mt-6">
+                      "想来？自己找到那扇门，按下门铃，并证明你是来对地方的。祝你好运。"
+                 </blockquote>
+             </div>
+         </div>
     </div>
     
     <div class="max-w-7xl mx-auto px-4 mt-16 text-center text-gray-500 italic text-sm">
