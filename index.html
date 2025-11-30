@@ -129,15 +129,14 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto sm:px-4 px-0"> 
+    <main class="max-w-7xl mx-auto p-4 lg:p-0"> 
         
-        <div class="mb-16 sm:px-4"> 
-            <div class="flex items-center gap-4 mb-8">
+        <div class="mb-16 lg:px-4"> <div class="flex items-center gap-4 mb-8">
                 <h2 class="text-4xl font-display text-white/90">CLASSICS</h2>
                 <div class="h-px bg-gradient-to-r from-amber-500/50 to-transparent flex-grow"></div>
             </div>
 
-            <div class="grid **grid-cols-2** md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 <div v-for="drink in classicDrinks" :key="drink.id" 
                     class="glass-card rounded-xl overflow-hidden group relative flex flex-col"
                     @click="openDrinkModal(drink)">
@@ -149,29 +148,28 @@
 
                     <div class="p-4 flex-grow flex flex-col">
                          <div class="flex justify-between items-start mb-2">
-                              <div>
-                                 <input v-model="drink.name" class="editable-input text-base font-bold text-white w-full font-display" placeholder="English Name" @click.stop="">
-                                 <input v-model="drink.subName" class="editable-input text-xs text-amber-500 w-full" placeholder="中文名" @click.stop="">
+                              <div class="min-w-0">
+                                 <input v-model="drink.name" class="editable-input text-base font-bold text-white w-full font-display min-w-0" placeholder="English Name" @click.stop="">
+                                 <input v-model="drink.subName" class="editable-input text-xs text-amber-500 w-full min-w-0" placeholder="中文名" @click.stop="">
                               </div>
                               <div class="text-lg font-display text-amber-400">
                                   <span class="text-xs">¥</span><input v-model="drink.price" class="bg-transparent w-6 text-right outline-none" type="text" @click.stop="">
                               </div>
                          </div>
-                         <input v-model="drink.tags" class="editable-input text-xs text-gray-400 mb-2 w-full" placeholder="风味标签" @click.stop="">
-                         <textarea v-model="drink.desc" class="editable-textarea text-xs text-gray-400 leading-relaxed w-full bg-transparent" placeholder="描述..." @click.stop=""></textarea>
+                         <input v-model="drink.tags" class="editable-input text-xs text-gray-400 mb-2 w-full min-w-0" placeholder="风味标签" @click.stop="">
+                         <textarea v-model="drink.desc" class="editable-textarea text-xs text-gray-400 leading-relaxed w-full bg-transparent min-w-0" placeholder="描述..." @click.stop=""></textarea>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="mb-20 sm:px-4"> 
-            <div class="flex items-center gap-4 mb-8 justify-center">
+        <div class="mb-20 lg:px-4"> <div class="flex items-center gap-4 mb-8 justify-center">
                 <div class="h-px bg-gradient-to-l from-amber-500/50 to-transparent flex-grow"></div>
                 <h2 class="text-4xl font-display text-white/90 text-center px-8 border-x border-amber-500/30">NEW ARRIVALS</h2>
                 <div class="h-px bg-gradient-to-r from-amber-500/50 to-transparent flex-grow"></div>
             </div>
 
-            <div class="grid **grid-cols-2** md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                  <div v-for="drink in newDrinks" :key="drink.id" 
                       class="glass-card rounded-xl overflow-hidden group relative flex flex-col"
                       @click="openDrinkModal(drink)">
@@ -183,16 +181,16 @@
 
                     <div class="p-4 flex-grow flex flex-col">
                         <div class="flex justify-between items-start mb-2">
-                             <div>
-                                 <input v-model="drink.name" class="editable-input text-base font-bold text-white w-full font-display" placeholder="English Name" @click.stop="">
-                                 <input v-model="drink.subName" class="editable-input text-xs text-amber-500 w-full" placeholder="中文名" @click.stop="">
+                             <div class="min-w-0">
+                                 <input v-model="drink.name" class="editable-input text-base font-bold text-white w-full font-display min-w-0" placeholder="English Name" @click.stop="">
+                                 <input v-model="drink.subName" class="editable-input text-xs text-amber-500 w-full min-w-0" placeholder="中文名" @click.stop="">
                              </div>
                              <div class="text-lg font-display text-amber-400">
                                  <span class="text-xs">¥</span><input v-model="drink.price" class="bg-transparent w-6 text-right outline-none" type="text" @click.stop="">
                              </div>
                         </div>
-                        <input v-model="drink.tags" class="editable-input text-xs text-gray-400 mb-2 w-full" placeholder="风味标签" @click.stop="">
-                        <textarea v-model="drink.desc" class="editable-textarea text-xs text-gray-400 leading-relaxed w-full bg-transparent" placeholder="描述..." @click.stop=""></textarea>
+                        <input v-model="drink.tags" class="editable-input text-xs text-gray-400 mb-2 w-full min-w-0" placeholder="风味标签" @click.stop="">
+                        <textarea v-model="drink.desc" class="editable-textarea text-xs text-gray-400 leading-relaxed w-full bg-transparent min-w-0" placeholder="描述..." @click.stop=""></textarea>
                     </div>
                  </div>
             </div>
