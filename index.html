@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Rubberneckers | X33</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,7 +16,6 @@
             --border-color: #e5e5e5;
         }
 
-        /* 隐藏默认光标 */
         body {
             background-color: #ffffff;
             color: var(--text-main);
@@ -24,7 +23,11 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
-            cursor: none; 
+        }
+
+        /* 仅在支持精确指针（如鼠标）的设备上隐藏默认光标 */
+        @media (pointer: fine) {
+            body { cursor: none; }
         }
 
         /* 自定义光标样式 */
@@ -54,7 +57,11 @@
                         background-color 0.3s, border-color 0.3s;
         }
 
-        /* 光标悬停交互状态 */
+        /* 确保在触摸屏设备上完全隐藏自定义光标 */
+        @media (pointer: coarse) {
+            .cursor-dot, .cursor-outline { display: none !important; }
+        }
+
         .cursor-hover .cursor-outline {
             width: 56px;
             height: 56px;
@@ -70,7 +77,6 @@
             background-color: #fff;
         }
 
-        /* 字体细节 */
         h1, h2, h3, .font-serif-en { font-family: 'Cormorant Garamond', serif; }
         .font-serif-cn { 
             font-family: 'Noto Serif SC', serif; 
@@ -90,9 +96,12 @@
             color: var(--text-main);
         }
 
-        .btn-outline:hover { background: var(--text-main); color: #ffffff; }
+        /* 修复移动端"粘滞悬停"问题，仅在支持 hover 的设备上应用 */
+        @media (hover: hover) {
+            .btn-outline:hover { background: var(--text-main); color: #ffffff; }
+            .menu-item:hover .menu-item-border { border-bottom-color: var(--text-main); }
+        }
 
-        /* 动画设定 */
         .reveal-up {
             opacity: 0;
             transform: translateY(40px);
@@ -115,10 +124,6 @@
         .img-mask.is-visible .img-scale { transform: scale(1); }
 
         .menu-item-border { border-bottom: 1px solid var(--border-color); transition: border-color 0.4s;}
-        .menu-item:hover .menu-item-border { border-bottom-color: var(--text-main); }
-
-        /* 性能优化：为视差图单独开启硬件加速 */
-        .will-change-transform { will-change: transform; }
 
         html { scroll-behavior: smooth; }
         [v-cloak] { display: none; }
@@ -147,7 +152,7 @@
         </div>
     </header>
 
-    <section class="h-screen w-full relative flex flex-col justify-end pb-20 px-6 md:px-12 pt-24 hover-target-dark">
+    <section class="h-[100dvh] w-full relative flex flex-col justify-end pb-20 px-6 md:px-12 pt-24 hover-target-dark">
         <div class="absolute inset-0 z-0 img-mask reveal-up">
             <img src="1.jpg" alt="Atmosphere" class="img-scale opacity-95">
             <div class="absolute inset-0 bg-black/10"></div>
@@ -156,12 +161,12 @@
         
         <div class="relative z-10 max-w-7xl mx-auto w-full reveal-up delay-100">
             <h1 class="text-5xl md:text-8xl text-white font-serif-en mb-4 tracking-wide">A Dorm Bar <br>at X33.</h1>
-            <p class="text-white/80 text-xs md:text-sm tracking-[0.2em] uppercase mb-10 font-light">Custom Orders Welcome</p>
+            <p class="text-white/80 text-xs md:text-sm tracking-[0.2em] uppercase mb-10 font-light"></p>
             <a href="#menu" class="btn-outline !text-white !border-white hover:!bg-white hover:!text-black hover-target">探索酒单 / Explore Menu</a>
         </div>
     </section>
 
-    <section id="event" class="py-24 md:py-40 px-6 max-w-7xl mx-auto">
+    <section id="event" class="py-20 md:py-40 px-6 max-w-7xl mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24 items-center">
             <div class="md:col-span-5 reveal-up">
                 <div class="text-[10px] tracking-[0.25em] text-gray-400 uppercase mb-4">Spring 2026</div>
@@ -174,16 +179,16 @@
                     <a href="#menu" class="text-[10px] uppercase tracking-widest border-b border-gray-300 pb-1 hover:border-black transition-colors hover-target">Discover the flavors</a>
                 </div>
             </div>
-            <div class="md:col-span-7 img-mask reveal-up delay-200 h-[60vh] md:h-[80vh]">
+            <div class="md:col-span-7 img-mask reveal-up delay-200 h-[50vh] md:h-[80vh]">
                 <img src="7.jpg" alt="The Bund" class="img-scale object-center">
             </div>
         </div>
     </section>
 
-    <section id="about" class="py-24 md:py-32 bg-[#faf9f7] px-6">
+    <section id="about" class="py-20 md:py-32 bg-[#faf9f7] px-6">
         <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32">
-                <div class="relative h-[70vh]">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-32">
+                <div class="relative h-[45vh] md:h-[70vh] mb-6 md:mb-0">
                     <div class="absolute top-0 left-0 w-3/4 h-3/4 img-mask reveal-up z-10 shadow-xl">
                         <img src="2.jpg" class="img-scale">
                     </div>
@@ -194,18 +199,18 @@
 
                 <div class="flex flex-col justify-center reveal-up delay-100">
                     <h2 class="text-3xl md:text-4xl font-serif-en mb-2">About Us</h2>
-                    <h3 class="text-lg font-serif-cn text-gray-400 mb-10">关于我们</h3>
+                    <h3 class="text-lg font-serif-cn text-gray-400 mb-8 md:mb-10">关于我们</h3>
                     
                     <div class="space-y-6 text-gray-600 font-light leading-relaxed text-sm">
                         <p>隐藏在 X33 寝室的秘密据点。没有显眼的招牌，也没有固定的营业时间。一切取决于当下的心境与夜色的浓度。</p>
                         <p>如果你恰好找到了那扇门，按下了门铃，并证明你是来对地方的——请准备好放下白日的疲惫。我们不定义标准，我们只提供情绪的出口与灵魂的栖息地。</p>
                         
-                        <blockquote class="border-l border-gray-300 pl-6 py-2 italic text-gray-500 mt-8 text-xs leading-loose">
+                        <blockquote class="border-l border-gray-300 pl-6 py-2 italic text-gray-500 mt-8 text-xs leading-loose relative">
                             "Address: A certain room, Dormitory X33.<br>
                             Business Hours: Depending on... my 
-                            <span class="relative group cursor-pointer border-b border-dotted border-gray-400 text-black hover-target">
+                            <span class="relative group cursor-pointer border-b border-dotted border-gray-400 text-black hover-target" tabindex="0">
                                 mood
-                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-48 p-3 bg-[#111] text-white text-[10px] tracking-widest font-serif-en text-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-sm shadow-xl z-50">
+                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 w-48 p-3 bg-[#111] text-white text-[10px] tracking-widest font-serif-en text-center opacity-0 group-hover:opacity-100 group-focus:opacity-100 active:opacity-100 transition-opacity duration-500 pointer-events-none rounded-sm shadow-xl z-50">
                                     Secret Pour: Jack Rose<br>
                                     <span class="font-serif-cn text-[9px] mt-2 block text-gray-400 tracking-wider">苹果白兰地 / 红石榴糖浆 / 柠檬</span>
                                 </span>
@@ -217,21 +222,21 @@
         </div>
     </section>
 
-    <section class="w-full h-[60vh] md:h-[70vh] relative overflow-hidden parallax-container hover-target-dark mb-24 md:mb-32">
-        <img src="8.jpg" alt="Jigger to Shaker" class="parallax-img absolute top-0 left-0 w-full h-[200%] object-cover object-center will-change-transform">
+    <section class="w-full h-[35vh] md:h-[50vh] img-mask reveal-up">
+        <img src="8.jpg" class="img-scale object-cover object-[50%_70%]">
     </section>
 
-    <section id="menu" class="py-12 md:py-12 px-6 max-w-5xl mx-auto">
-        <div class="text-center mb-24 reveal-up">
+    <section id="menu" class="py-20 md:py-40 px-6 max-w-5xl mx-auto">
+        <div class="text-center mb-16 md:mb-24 reveal-up">
             <h2 class="text-4xl md:text-6xl font-serif-en mb-6">The Menu</h2>
             <div class="w-8 h-px bg-black mx-auto mb-6"></div>
             <p class="text-[10px] tracking-[0.3em] text-gray-400 uppercase">Classic & Original</p>
         </div>
 
-        <div class="mb-32 reveal-up">
-            <h3 class="text-xl md:text-2xl font-serif-en mb-12 tracking-widest uppercase text-gray-800">Classics <span class="text-xs text-gray-400 font-serif-cn normal-case italic ml-3">经典</span></h3>
+        <div class="mb-24 md:mb-32 reveal-up">
+            <h3 class="text-xl md:text-2xl font-serif-en mb-10 md:mb-12 tracking-widest uppercase text-gray-800">Classics <span class="text-xs text-gray-400 font-serif-cn normal-case italic ml-3">经典</span></h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-10 md:gap-y-12">
                 <div v-for="(drink, index) in classicDrinks" :key="drink.id" 
                      class="menu-item group flex flex-col justify-between hover-target"
                      :class="{'reveal-up': true, 'delay-100': index % 2 === 1}">
@@ -248,14 +253,14 @@
             </div>
         </div>
 
-        <div class="w-full h-64 md:h-96 img-mask reveal-up mb-32">
+        <div class="w-full h-48 md:h-96 img-mask reveal-up mb-24 md:mb-32">
             <img src="3.jpg" class="img-scale">
         </div>
 
         <div class="reveal-up">
-            <h3 class="text-xl md:text-2xl font-serif-en mb-12 tracking-widest uppercase text-gray-800">New Arrivals <span class="text-xs text-gray-400 font-serif-cn normal-case italic ml-3">特调与新品</span></h3>
+            <h3 class="text-xl md:text-2xl font-serif-en mb-10 md:mb-12 tracking-widest uppercase text-gray-800">New Arrivals <span class="text-xs text-gray-400 font-serif-cn normal-case italic ml-3">特调与新品</span></h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-10 md:gap-y-12">
                 <div v-for="(drink, index) in newDrinks" :key="drink.id" 
                      class="menu-item group flex flex-col justify-between hover-target"
                      :class="{'reveal-up': true, 'delay-100': index % 2 === 1}">
@@ -273,27 +278,24 @@
         </div>
     </section>
 
-    <footer class="bg-[#111] text-white pt-24 pb-12 px-6 hover-target-dark relative overflow-hidden">
+    <footer class="bg-[#111] text-white pt-20 md:pt-24 pb-12 px-6 hover-target-dark relative overflow-hidden">
         <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20 reveal-up">
-                <div class="img-mask h-64 md:h-80"><img src="4.jpg" class="img-scale"></div>
-                <div class="img-mask h-64 md:h-80 mt-0 md:mt-12"><img src="5.jpg" class="img-scale"></div>
-                <div class="flex flex-col justify-center text-center md:text-left px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-16 md:mb-20 reveal-up">
+                <div class="img-mask h-48 md:h-80"><img src="4.jpg" class="img-scale"></div>
+                <div class="img-mask h-48 md:h-80 mt-0 md:mt-12"><img src="5.jpg" class="img-scale"></div>
+                <div class="flex flex-col justify-center text-center md:text-left px-4 mt-8 md:mt-0">
                     <h3 class="text-2xl font-serif-en mb-6 text-white">Find Us</h3>
                     <p class="text-gray-400 text-sm font-light leading-relaxed mb-4">
                         WeChat: 13816077390 <br>
                         Location: Dormitory X33
                     </p>
-                    <p class="text-gray-500 text-[11px] italic font-serif-cn mt-6">
-                        "经典鸡尾酒已按综合烈度从低到高排列"
-                    </p>
                 </div>
             </div>
             
-            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-500 tracking-widest uppercase reveal-up">
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-500 tracking-widest uppercase reveal-up space-y-6 md:space-y-0">
                 <p>&copy; 2026 Rubberneckers Dorm Bar.</p>
                 
-                <div class="my-6 md:my-0 group cursor-default">
+                <div class="group cursor-default">
                     <p class="text-[#111] transition-colors duration-[1500ms] group-hover:text-gray-600 font-serif-en text-center text-[9px] tracking-[0.3em]">
                         Synchronicity is an ever-present reality.<br>
                         <span class="italic text-[#111] group-hover:text-gray-500 transition-colors duration-[2000ms] mt-1 block">IX. The Hermit</span>
@@ -308,59 +310,56 @@
 </div>
 
 <script>
-    // --- 光标逻辑与 Preloader ---
     document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
             const preloader = document.getElementById('preloader');
-            if(preloader){
-                preloader.style.opacity = '0';
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                }, 1000);
-            }
-        }, 1500);
+            preloader.style.opacity = '0';
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 1000); 
+        }, 1500); 
 
         const cursorDot = document.getElementById('cursor-dot');
         const cursorOutline = document.getElementById('cursor-outline');
         
+        // 进一步保障触摸设备隐藏光标，避免 JS/CSS 冲突
         if (window.matchMedia("(pointer: coarse)").matches) {
             cursorDot.style.display = 'none';
             cursorOutline.style.display = 'none';
-            document.body.style.cursor = 'auto';
-            return;
+        } else {
+            window.addEventListener('mousemove', (e) => {
+                const posX = e.clientX;
+                const posY = e.clientY;
+
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+
+                cursorOutline.style.left = `${posX}px`;
+                cursorOutline.style.top = `${posY}px`;
+            });
+
+            const hoverTargets = document.querySelectorAll('a, button, .hover-target');
+            hoverTargets.forEach(target => {
+                target.addEventListener('mouseenter', () => {
+                    document.body.classList.add('cursor-hover');
+                });
+                target.addEventListener('mouseleave', () => {
+                    document.body.classList.remove('cursor-hover');
+                });
+            });
+
+            const darkSections = document.querySelectorAll('.hover-target-dark');
+            darkSections.forEach(section => {
+                section.addEventListener('mouseenter', () => {
+                    document.body.classList.add('cursor-hover-dark');
+                });
+                section.addEventListener('mouseleave', () => {
+                    document.body.classList.remove('cursor-hover-dark');
+                });
+            });
         }
-
-        window.addEventListener('mousemove', (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
-            cursorOutline.style.left = `${posX}px`;
-            cursorOutline.style.top = `${posY}px`;
-        });
-
-        const hoverTargets = document.querySelectorAll('a, button, .hover-target');
-        hoverTargets.forEach(target => {
-            target.addEventListener('mouseenter', () => {
-                document.body.classList.add('cursor-hover');
-            });
-            target.addEventListener('mouseleave', () => {
-                document.body.classList.remove('cursor-hover');
-            });
-        });
-
-        const darkSections = document.querySelectorAll('.hover-target-dark');
-        darkSections.forEach(section => {
-            section.addEventListener('mouseenter', () => {
-                document.body.classList.add('cursor-hover-dark');
-            });
-            section.addEventListener('mouseleave', () => {
-                document.body.classList.remove('cursor-hover-dark');
-            });
-        });
     });
 
-    // --- Vue 与滚动观察逻辑 ---
     const { createApp, ref, onMounted } = Vue;
 
     const classicDrinksList = [
@@ -389,7 +388,6 @@
             const newDrinks = ref(newDrinksList);
 
             onMounted(() => {
-                // 原有 Intersection Observer
                 const observerOptions = {
                     root: null,
                     rootMargin: '0px',
@@ -411,29 +409,6 @@
                 document.querySelectorAll('.reveal-up, .img-mask').forEach((el) => {
                     observer.observe(el);
                 });
-
-                // 修改版：视差滚动幅度翻倍
-                const parallaxImg = document.querySelector('.parallax-img');
-                const parallaxContainer = document.querySelector('.parallax-container');
-                
-                if (parallaxImg && parallaxContainer) {
-                    window.addEventListener('scroll', () => {
-                        const rect = parallaxContainer.getBoundingClientRect();
-                        const viewHeight = window.innerHeight;
-                        
-                        // 仅当视窗进入可视区域时触发计算
-                        if (rect.top <= viewHeight && rect.bottom >= 0) {
-                            const totalDistance = viewHeight + rect.height;
-                            const traveled = viewHeight - rect.top;
-                            // 进度：0 (刚从底部露出) -> 1 (完全从顶部离开)
-                            const progress = traveled / totalDistance;
-                            
-                            // 动效翻倍：位移比例从 25% 提升到 50%
-                            // 配合 200% 的图片高度，正好能把 Shaker 从底部完全拉扯上来
-                            parallaxImg.style.transform = `translate3d(0, -${progress * 75}%, 0)`;
-                        }
-                    }, { passive: true });
-                }
             });
 
             return {
