@@ -25,12 +25,10 @@
             overflow-x: hidden;
         }
 
-        /* 仅在支持精确指针（如鼠标）的设备上隐藏默认光标 */
         @media (pointer: fine) {
             body { cursor: none; }
         }
 
-        /* 自定义光标样式 */
         .cursor-dot, .cursor-outline {
             pointer-events: none;
             position: fixed;
@@ -57,7 +55,6 @@
                         background-color 0.3s, border-color 0.3s;
         }
 
-        /* 确保在触摸屏设备上完全隐藏自定义光标 */
         @media (pointer: coarse) {
             .cursor-dot, .cursor-outline { display: none !important; }
         }
@@ -96,7 +93,6 @@
             color: var(--text-main);
         }
 
-        /* 修复移动端"粘滞悬停"问题，仅在支持 hover 的设备上应用 */
         @media (hover: hover) {
             .btn-outline:hover { background: var(--text-main); color: #ffffff; }
             .menu-item:hover .menu-item-border { border-bottom-color: var(--text-main); }
@@ -160,15 +156,15 @@
         </div>
         
         <div class="relative z-10 max-w-7xl mx-auto w-full reveal-up delay-100">
-            <h1 class="text-5xl md:text-8xl text-white font-serif-en mb-4 tracking-wide">A Dorm Bar <br>at X33.</h1>
+            <h1 class="text-[9.5vw] md:text-7xl lg:text-8xl text-white font-serif-en mb-4 tracking-wide whitespace-nowrap">A Dorm Bar at X33.</h1>
             <p class="text-white/80 text-xs md:text-sm tracking-[0.2em] uppercase mb-10 font-light"></p>
-            <a href="#menu" class="btn-outline !text-white !border-white hover:!bg-white hover:!text-black hover-target">探索酒单 / Explore Menu</a>
+            <a href="#menu" class="btn-outline !text-white !border-white hover:!bg-white hover:!text-black hover-target whitespace-nowrap">探索酒单 / Explore Menu</a>
         </div>
     </section>
 
     <section id="event" class="py-20 md:py-40 px-6 max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-24 items-center">
-            <div class="md:col-span-5 reveal-up">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 items-center">
+            <div class="lg:col-span-5 reveal-up">
                 <div class="text-[10px] tracking-[0.25em] text-gray-400 uppercase mb-4">Spring 2026</div>
                 <h2 class="text-3xl md:text-5xl font-serif-cn mb-8 leading-tight">二六年春 <br><span class="italic font-serif-en text-gray-400">Exploring Shanghai</span></h2>
                 <div class="space-y-6 text-gray-600 font-light leading-relaxed text-sm">
@@ -179,7 +175,7 @@
                     <a href="#menu" class="text-[10px] uppercase tracking-widest border-b border-gray-300 pb-1 hover:border-black transition-colors hover-target">Discover the flavors</a>
                 </div>
             </div>
-            <div class="md:col-span-7 img-mask reveal-up delay-200 h-[50vh] md:h-[80vh]">
+            <div class="lg:col-span-7 img-mask reveal-up delay-200 h-[50vh] md:h-[80vh]">
                 <img src="7.jpg" alt="The Bund" class="img-scale object-center">
             </div>
         </div>
@@ -187,8 +183,8 @@
 
     <section id="about" class="py-20 md:py-32 bg-[#faf9f7] px-6">
         <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-32">
-                <div class="relative h-[45vh] md:h-[70vh] mb-6 md:mb-0">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-32">
+                <div class="relative h-[45vh] md:h-[70vh] mb-6 lg:mb-0">
                     <div class="absolute top-0 left-0 w-3/4 h-3/4 img-mask reveal-up z-10 shadow-xl">
                         <img src="2.jpg" class="img-scale">
                     </div>
@@ -236,17 +232,19 @@
         <div class="mb-24 md:mb-32 reveal-up">
             <h3 class="text-xl md:text-2xl font-serif-en mb-10 md:mb-12 tracking-widest uppercase text-gray-800">Classics <span class="text-xs text-gray-400 font-serif-cn normal-case italic ml-3">经典</span></h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-10 md:gap-y-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-10 md:gap-y-12">
                 <div v-for="(drink, index) in classicDrinks" :key="drink.id" 
                      class="menu-item group flex flex-col justify-between hover-target"
                      :class="{'reveal-up': true, 'delay-100': index % 2 === 1}">
-                    <div class="menu-item-border pb-3 flex justify-between items-end mb-3">
-                        <div class="flex items-baseline gap-3">
-                            <span class="text-lg font-serif-en font-medium">{{ drink.name }}</span>
-                            <span class="text-[11px] text-gray-400 font-serif-cn">{{ drink.subName }}</span>
+                    
+                    <div class="menu-item-border pb-3 flex justify-between items-end mb-3 gap-4">
+                        <div class="flex items-baseline gap-2 md:gap-3 flex-1 min-w-0">
+                            <span class="text-lg font-serif-en font-medium truncate">{{ drink.name }}</span>
+                            <span class="text-[11px] text-gray-400 font-serif-cn whitespace-nowrap flex-shrink-0">{{ drink.subName }}</span>
                         </div>
-                        <div class="text-sm font-serif-en">{{ drink.price }}</div>
+                        <div class="text-sm font-serif-en whitespace-nowrap flex-shrink-0">{{ drink.price }}</div>
                     </div>
+
                     <div class="text-[9px] tracking-[0.2em] text-gray-400 mb-2 uppercase">{{ drink.tags }}</div>
                     <p class="text-xs text-gray-500 font-light leading-relaxed font-serif-cn">{{ drink.desc }}</p>
                 </div>
@@ -260,17 +258,19 @@
         <div class="reveal-up">
             <h3 class="text-xl md:text-2xl font-serif-en mb-10 md:mb-12 tracking-widest uppercase text-gray-800">New Arrivals <span class="text-xs text-gray-400 font-serif-cn normal-case italic ml-3">特调与新品</span></h3>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-20 gap-y-10 md:gap-y-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-10 md:gap-y-12">
                 <div v-for="(drink, index) in newDrinks" :key="drink.id" 
                      class="menu-item group flex flex-col justify-between hover-target"
                      :class="{'reveal-up': true, 'delay-100': index % 2 === 1}">
-                    <div class="menu-item-border pb-3 flex justify-between items-end mb-3">
-                        <div class="flex items-baseline gap-3">
-                            <span class="text-lg font-serif-en font-medium">{{ drink.name }}</span>
-                            <span class="text-[11px] text-gray-400 font-serif-cn">{{ drink.subName }}</span>
+                    
+                    <div class="menu-item-border pb-3 flex justify-between items-end mb-3 gap-4">
+                        <div class="flex items-baseline gap-2 md:gap-3 flex-1 min-w-0">
+                            <span class="text-lg font-serif-en font-medium truncate">{{ drink.name }}</span>
+                            <span class="text-[11px] text-gray-400 font-serif-cn whitespace-nowrap flex-shrink-0">{{ drink.subName }}</span>
                         </div>
-                        <div class="text-sm font-serif-en">{{ drink.price }}</div>
+                        <div class="text-sm font-serif-en whitespace-nowrap flex-shrink-0">{{ drink.price }}</div>
                     </div>
+
                     <div class="text-[9px] tracking-[0.2em] text-gray-400 mb-2 uppercase">{{ drink.tags }}</div>
                     <p class="text-xs text-gray-500 font-light leading-relaxed font-serif-cn">{{ drink.desc }}</p>
                 </div>
@@ -280,10 +280,10 @@
 
     <footer class="bg-[#111] text-white pt-20 md:pt-24 pb-12 px-6 hover-target-dark relative overflow-hidden">
         <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-16 md:mb-20 reveal-up">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 mb-16 md:mb-20 reveal-up">
                 <div class="img-mask h-48 md:h-80"><img src="4.jpg" class="img-scale"></div>
-                <div class="img-mask h-48 md:h-80 mt-0 md:mt-12"><img src="5.jpg" class="img-scale"></div>
-                <div class="flex flex-col justify-center text-center md:text-left px-4 mt-8 md:mt-0">
+                <div class="img-mask h-48 md:h-80 mt-0 lg:mt-12"><img src="5.jpg" class="img-scale"></div>
+                <div class="flex flex-col justify-center text-center lg:text-left px-4 mt-8 lg:mt-0">
                     <h3 class="text-2xl font-serif-en mb-6 text-white">Find Us</h3>
                     <p class="text-gray-400 text-sm font-light leading-relaxed mb-4">
                         WeChat: 13816077390 <br>
@@ -322,7 +322,6 @@
         const cursorDot = document.getElementById('cursor-dot');
         const cursorOutline = document.getElementById('cursor-outline');
         
-        // 进一步保障触摸设备隐藏光标，避免 JS/CSS 冲突
         if (window.matchMedia("(pointer: coarse)").matches) {
             cursorDot.style.display = 'none';
             cursorOutline.style.display = 'none';
