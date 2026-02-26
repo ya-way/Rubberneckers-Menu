@@ -2,13 +2,13 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">    
     <title>Rubberneckers | X33</title>
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    
+    <header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-50 transition-all duration-300 pt-[env(safe-area-inset-top)]">
     <link rel="icon" type="image/png" sizes="192x192" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="apple-touch-icon.png">
     
@@ -82,7 +82,9 @@
             background-color: #fff;
         }
 
-        h1, h2, h3, .font-serif-en { font-family: 'Cormorant Garamond', serif; }
+        h1, h2, h3, .font-serif-en { 
+    font-family: 'Cormorant Garamond', 'Baskerville', 'Georgia', 'Times New Roman', serif; 
+}
         .font-serif-cn { 
             font-family: 'Noto Serif SC', serif; 
             letter-spacing: 0.05em; 
