@@ -254,7 +254,7 @@
                         <div class="text-sm font-serif-en whitespace-nowrap flex-shrink-0">{{ drink.price }}</div>
                     </div>
 
-                    <div class="text-[9px] tracking-[0.2em] text-gray-400 mb-2 uppercase">{{ drink.tags }}</div>
+                    <div v-if="drink.tags" class="text-[9px] tracking-[0.2em] text-gray-400 mb-2 uppercase">{{ drink.tags }}</div>
                     <p class="text-xs text-gray-500 font-light leading-relaxed font-serif-cn">{{ drink.desc }}</p>
                 </div>
             </div>
@@ -280,7 +280,29 @@
                         <div class="text-sm font-serif-en whitespace-nowrap flex-shrink-0">{{ drink.price }}</div>
                     </div>
 
-                    <div class="text-[9px] tracking-[0.2em] text-gray-400 mb-2 uppercase">{{ drink.tags }}</div>
+                    <div v-if="drink.tags" class="text-[9px] tracking-[0.2em] text-gray-400 mb-2 uppercase">{{ drink.tags }}</div>
+                    <p class="text-xs text-gray-500 font-light leading-relaxed font-serif-cn">{{ drink.desc }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-24 md:mt-32 reveal-up">
+            <h3 class="text-xl md:text-2xl font-serif-en mb-10 md:mb-12 tracking-widest uppercase text-gray-800">Temporary Menu <span class="text-xs text-gray-400 font-serif-cn normal-case italic ml-3">临时菜单</span></h3>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-10 md:gap-y-12">
+                <div v-for="(drink, index) in temporaryDrinks" :key="drink.id" 
+                     class="menu-item group flex flex-col justify-between hover-target"
+                     :class="{'reveal-up': true, 'delay-100': index % 2 === 1}">
+                    
+                    <div class="menu-item-border pb-3 flex justify-between items-end mb-3 gap-4">
+                        <div class="flex items-baseline gap-2 md:gap-3 flex-1 min-w-0">
+                            <span class="text-lg font-serif-en font-medium truncate">{{ drink.name }}</span>
+                            <span class="text-[11px] text-gray-400 font-serif-cn whitespace-nowrap flex-shrink-0">{{ drink.subName }}</span>
+                        </div>
+                        <div class="text-sm font-serif-en whitespace-nowrap flex-shrink-0">{{ drink.price }}</div>
+                    </div>
+
+                    <div v-if="drink.tags" class="text-[9px] tracking-[0.2em] text-gray-400 mb-2 uppercase">{{ drink.tags }}</div>
                     <p class="text-xs text-gray-500 font-light leading-relaxed font-serif-cn">{{ drink.desc }}</p>
                 </div>
             </div>
@@ -371,29 +393,45 @@
     const { createApp, ref, onMounted } = Vue;
 
     const classicDrinksList = [
-        { id: 1, name: 'Mamie Taylor', subName: '玛米泰勒', price: '35', tags: 'Ginger / Whiskey / Lime', desc: '19世纪的消暑经典，威士忌与姜汁啤酒的复古组合。' },
-        { id: 2, name: 'Jungle Bird', subName: '丛林鸟', price: '40', tags: 'Tropical / Dark Rum', desc: '马来西亚传奇配方！属于朗姆酒与Campari的丛林冒险。' },
-        { id: 3, name: 'El Diablo', subName: '恶魔', price: '45', tags: 'Berry / Spicy / Tequila', desc: '混合黑加仑的甜蜜与银龙舌兰的辛辣，如恶魔在舌尖低语。' },
-        { id: 4, name: 'Mizuwari', subName: '水割', price: '45', tags: 'Pure / Whiskey', desc: '日式饮法的精髓，以精准的水冰比例释放威士忌的细腻层次。' },
-        { id: 5, name: 'Gimlet', subName: '琴蕾', price: '35', tags: 'Clean / Lime / Gin', desc: '干净利落，青柠的酸与金酒的凛冽。成名于《漫长的告别》。' },
-        { id: 6, name: 'Classic Highball', subName: '角嗨', price: '40', tags: 'Soda / Whiskey', desc: '初尝时不会感到惊艳，但习惯了便放不下的东西之一。' },
-        { id: 7, name: 'Whiskey Sour', subName: '威士忌酸', price: '35', tags: 'Silky / Lemon / Whiskey', desc: '简单直接，丝滑的口感带着柠檬的清爽。经典中之经典。' },
-        { id: 8, name: 'Naked & Famous', subName: '一脱成名', price: '55', tags: 'Smoky / Mezcal / Herbal', desc: '完美融合了烟熏龙舌兰与苦蒿利口酒的叛逆风味，现代经典。' },
-        { id: 9, name: 'Long Island Iced-tea', subName: '长岛冰茶', price: '65', tags: 'Strong / Spirits', desc: '无害的茶色下藏着四种基酒的烈性，Literally令人沉醉。' },
-        { id: 10, name: 'Godfather', subName: '教父', price: '55', tags: 'Deep / Cinnamon / Almond', desc: '烤肉桂条的温暖香气缠绕着威士忌，醇厚深邃。别样的黑帮仪式感。' },
-        { id: 11, name: 'Old-Fashioned', subName: '古典', price: '45', tags: 'Sugar / Bitters / Whiskey', desc: '方糖、苦精与威士忌的简单组合，创造出平衡的口感。鸡尾酒的鼻祖。' }
+        { id: 1, name: 'Mamie Taylor', subName: '玛米泰勒', price: '35', tags: 'Ginger / Whiskey / Lime', desc: '19世纪的消暑经典，威士忌与姜汁啤酒的复古组合' },
+        { id: 2, name: 'Jungle Bird', subName: '丛林鸟', price: '40', tags: 'Tropical / Dark Rum', desc: '马来西亚传奇配方！属于朗姆酒与Campari的丛林冒险' },
+        { id: 3, name: 'El Diablo', subName: '恶魔', price: '45', tags: 'Berry / Spicy / Tequila', desc: '混合黑加仑的甜蜜与银龙舌兰的辛辣，如恶魔在舌尖低语' },
+        { id: 4, name: 'Mizuwari', subName: '水割', price: '45', tags: 'Pure / Whiskey', desc: '日式饮法的精髓，以精准的水冰比例释放威士忌的细腻层次' },
+        { id: 5, name: 'Gimlet', subName: '琴蕾', price: '35', tags: 'Clean / Lime / Gin', desc: '干净利落，青柠的酸与金酒的凛冽成名于《漫长的告别》' },
+        { id: 6, name: 'Classic Highball', subName: '角嗨', price: '40', tags: 'Soda / Whiskey', desc: '初尝时不会感到惊艳，但习惯了便放不下的东西之一' },
+        { id: 7, name: 'Whiskey Sour', subName: '威士忌酸', price: '35', tags: 'Silky / Lemon / Whiskey', desc: '简单直接，丝滑的口感带着柠檬的清爽经典中之经典' },
+        { id: 8, name: 'Naked & Famous', subName: '一脱成名', price: '55', tags: 'Smoky / Mezcal / Herbal', desc: '完美融合了烟熏龙舌兰与苦蒿利口酒的叛逆风味，现代经典' },
+        { id: 9, name: 'Long Island Iced-tea', subName: '长岛冰茶', price: '65', tags: 'Strong / Spirits', desc: '无害的茶色下藏着四种基酒的烈性，Literally令人沉醉' },
+        { id: 10, name: 'Godfather', subName: '教父', price: '55', tags: 'Deep / Cinnamon / Almond', desc: '烤肉桂条的温暖香气缠绕着威士忌，醇厚深邃别样的黑帮仪式感' },
+        { id: 11, name: 'Old-Fashioned', subName: '古典', price: '45', tags: 'Sugar / Bitters / Whiskey', desc: '方糖、苦精与威士忌的简单组合，创造出平衡的口感鸡尾酒的鼻祖' }
     ];
 
     const newDrinksList = [
-        { id: 12, name: 'A Study in Pink', subName: '莓瑰', price: '55', tags: 'Raspberry / Cassis / Rose', desc: '以树莓、黑加仑和玫瑰调配的特调。充满疑问：玫瑰是什么味道？' },
-        { id: 13, name: 'Garden of Eden', subName: '伊甸', price: '45', tags: 'Green Apple / Smoky Whiskey', desc: '以青苹果的清新搭配烟熏威士忌的泥土气息。你真的可以喝到整个故事。' },
-        { id: 14, name: 'Mourn', subName: '哀悼', price: '45', tags: 'Salted Lemon / White Grape', desc: '咸柠檬和白葡萄的组合，口感独特。借鉴港澳饮品“咸柠七”，纪念一位朋友。' }
+        { id: 12, name: 'A Study in Pink', subName: '莓瑰', price: '55', tags: 'Raspberry / Cassis / Rose', desc: '以树莓、黑加仑和玫瑰调配的特调充满疑问：玫瑰是什么味道？' },
+        { id: 13, name: 'Garden of Eden', subName: '伊甸', price: '45', tags: 'Green Apple / Smoky Whiskey', desc: '以青苹果的清新搭配烟熏威士忌的泥土气息你真的可以喝到整个故事' },
+        { id: 14, name: 'Mourn', subName: '哀悼', price: '45', tags: 'Salted Lemon / White Grape', desc: '咸柠檬和白葡萄的组合，口感独特借鉴港澳饮品“咸柠七”，纪念一位朋友' }
+    ];
+
+    const temporaryDrinksList = [
+        { id: 15, name: 'Siyuan Lake', subName: '思源湖', price: '28', tags: 'Pineapple / Coconut / Lemon', desc: '无醇Pina colada，属于菠萝与椰子的热带甜香' },
+        { id: 16, name: 'Cedar Passion Kombucha', subName: '西番莲木香康普', price: '38', tags: 'Cedar / Passionfruit / Kombucha', desc: '雪松的木质气息与西番莲的明亮酸香，佐以康普茶的微微发酵感' },
+        { id: 17, name: 'Fukuoka Tonic', subName: '福冈汤力', price: '38', tags: 'Yuzu / Lemon / Tonic', desc: '一阵来自福冈的清风' },
+        { id: 18, name: 'Matcha Lime Cheese Cake', subName: '抹茶青柠芝士蛋糕', price: '38', tags: 'Matcha / Lime / Buttermilk', desc: '抹茶的微苦、青柠的清酸与酪乳的奶香，组成一杯完美的液体蛋糕' },
+        { id: 19, name: 'Rooibos Cheese Latte', subName: '路易波士茶干酪撞奶', price: '38', tags: 'Rooibos / Caramel / Cheese', desc: '温和、厚实，一杯着急喝完的甜茶' },
+        { id: 20, name: 'Flipped', subName: '怦然心动', price: '38', tags: 'Guava / Longjing / Lemon', desc: '品鉴芭乐的独特果香与龙井的清雅' },
+        { id: 21, name: 'Melancholy', subName: '忧郁', price: '68', tags: '???', desc: '人的忧郁并不相同，这杯也是' },
+        { id: 22, name: 'Moscow Mule', subName: '莫斯科骡子', price: '28', tags: 'Ginger Beer / Rosemary / Lime', desc: '无醇莫斯科骡子，经典中的经典' },
+        { id: 23, name: 'Last Word', subName: '遗言（狗的）', price: '38', tags: 'Chocolate / Hazelnut / Thick Milk', desc: '一杯过分认真的巧克力奶' },
+        { id: 24, name: 'Moscow Meow', subName: '莫斯科猫', price: '48', tags: 'Cassis / Lime / Ginger Beer', desc: '黑加仑的异域果香被姜汁的鲜辣托起，香甜而不落俗' },
+        { id: 25, name: 'Bloody Mary', subName: '血腥玛丽', price: '48', tags: 'Tomato / Jalapeño / Worcestershire', desc: '墨西哥辣椒负责咬人，番茄和喼汁负责把事情变复杂' },
+        { id: 26, name: 'Negronis', subName: '尼格罗尼', price: '68', tags: 'Bitter / Herbal / Orange', desc: '以三款无醇原料复刻尼格罗尼的苦甜骨架，经典依旧' }
     ];
 
     createApp({
         setup() {
             const classicDrinks = ref(classicDrinksList);
             const newDrinks = ref(newDrinksList);
+            const temporaryDrinks = ref(temporaryDrinksList);
 
             onMounted(() => {
                 const observerOptions = {
@@ -421,7 +459,8 @@
 
             return {
                 classicDrinks,
-                newDrinks
+                newDrinks,
+                temporaryDrinks
             };
         }
     }).mount('#app');
